@@ -245,6 +245,103 @@ Troubleshooting
 - Check node status: `kubectl get nodes`
 - If pods are Pending, inspect scheduling (insufficient resources, taints).
 
+Service Mesh (overview and examples)
+-----------------------------------
+Service meshes provide observability, secure service-to-service communication (mTLS), traffic control (canary, retries, timeouts), and policy enforcement across microservices. Two popular meshes are Istio and Linkerd.
+
+When to use a mesh
+- You need uniform telemetry (tracing, metrics) across services.
+- You want platform-level security (mutual TLS) without changing app code.
+- You need advanced traffic control (circuit breaking, traffic shifting, retries).
+
+Istio (quick start and example VirtualService)
+- Install (using `istioctl`):
+```bash
+curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.20.0 sh -
+cd istio-1.20.0
+istioctl install --set profile=demo -y
+istioctl verify-install
+```
+- Enable sidecar injection for a namespace:
+```bash
+kubectl label namespace mynamespace istio-injection=enabled
+```
+- Example Gateway + VirtualService to route traffic to `myapp`:
+```yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: myapp-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "myapp.example.com"
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: myapp
+spec:
+  hosts:
+  - "myapp.example.com"
+  gateways:
+  - myapp-gateway
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: myapp
+        port:
+          number: 80
+```
+- Traffic shifting (canary) example snippet:
+```yaml
+  - route:
+    - destination:
+        host: myapp
+        subset: stable
+      weight: 90
+    - destination:
+        host: myapp
+        subset: canary
+      weight: 10
+```
+
+Linkerd (quick start and inject example)
+- Install (Linkerd CLI):
+```bash
+curl -sL https://run.linkerd.io/install | sh
+linkerd check --pre
+linkerd install | kubectl apply -f -
+linkerd check
+```
+- Enable automatic proxy injection for a namespace:
+```bash
+kubectl annotate namespace mynamespace linkerd.io/inject=enabled
+```
+- Inject sidecar into a deployment manifest (example):
+```bash
+kubectl get deploy myapp -o yaml | linkerd inject - | kubectl apply -f -
+```
+- Linkerd provides mTLS by default between proxies and lightweight observability (tap, top, viz add-on).
+
+Considerations and best practices
+- Start in a staging cluster with a small subset of services to understand impact.
+- Use automatic sidecar injection where possible and avoid manual sidecar changes.
+- Monitor CPU/memory overhead from sidecars and adjust resource requests.
+- Decide on control-plane HA, upgrade policy, and how to roll back a mesh install.
+- Evaluate policy/telemetry needs: Istio is feature-rich and configurable; Linkerd is lightweight and simpler to operate.
+
+
 Further reading
 ---------------
 - Kubernetes docs: https://kubernetes.io/docs/home/
