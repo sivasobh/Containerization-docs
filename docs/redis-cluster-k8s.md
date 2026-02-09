@@ -7,6 +7,8 @@ This note covers deployment patterns, HA considerations, and operational runbook
 - **Sentinel + Masters/Replicas:** provides automatic failover for master/replica topologies; commonly used for HA without sharding.
 - **Redis Cluster:** native sharding with cluster slots and node-to-node replication; supports scaling and data partitioning.
 
+![Redis cluster overview](assets/redis-cluster.svg)
+
 ## Deployment Options on Kubernetes
 - **Helm charts (Bitnami/Redis official):** quick start for dev/test; can be configured for cluster mode or sentinel mode.
 - **Operators (recommended for production):** e.g., Redis Operator by Spot/OTC, Redis Enterprise Operator, or community operators — manage CRs, backups, failover.

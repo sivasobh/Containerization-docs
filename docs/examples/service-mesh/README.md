@@ -103,6 +103,8 @@ Grafana provisioning & automatic dashboard
 - The example includes a `ConfigMap` (`grafana-backend-dashboard`) labeled so the Grafana sidecar (kube-prometheus-stack) can automatically pick up the dashboard. If you installed Grafana separately, import `docs/examples/service-mesh/grafana-backend-dashboard.json` manually.
 - Datasource provisioning example is in `docs/examples/service-mesh/grafana/provisioning/datasources/datasource.yaml` (points to Prometheus Operator service).
 
+![Monitoring architecture](../assets/monitoring-arch.svg)
+
 Traffic generation (canary testing)
 
 1. Run the Job inside the cluster to generate traffic to `/backend`:

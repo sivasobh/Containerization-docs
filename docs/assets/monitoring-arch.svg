@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+  <style> .title { font: bold 18px sans-serif } .label{ font: 12px sans-serif } .box{ fill:#f7fbff; stroke:#2b6cb0 }</style>
+  <text x="20" y="28" class="title">Monitoring & Observability Architecture</text>
+  <rect x="20" y="50" width="300" height="120" class="box" rx="6"/>
+  <text x="40" y="80" class="label">Applications / Sidecars</text>
+  <text x="40" y="100" class="label">- expose /metrics, tracing headers</text>
+
+  <rect x="340" y="50" width="220" height="120" class="box" rx="6"/>
+  <text x="360" y="80" class="label">Prometheus (Operator)</text>
+  <text x="360" y="100" class="label">- scrapes ServiceMonitors</text>
+
+  <rect x="580" y="50" width="220" height="120" class="box" rx="6"/>
+  <text x="600" y="80" class="label">Grafana</text>
+  <text x="600" y="100" class="label">- dashboards (provisioned)</text>
+
+  <line x1="320" y1="110" x2="340" y2="110" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow)" />
+  <line x1="560" y1="110" x2="580" y2="110" stroke="#2b6cb0" stroke-width="2" marker-end="url(#arrow)" />
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2b6cb0" />
+    </marker>
+  </defs>
+
+  <text x="40" y="200" class="label">Tracing -> Jaeger/Tempo; Logs -> EFK stack</text>
+  <text x="40" y="220" class="label">Alerts -> Alertmanager -> Pager / Slack</text>
+</svg>

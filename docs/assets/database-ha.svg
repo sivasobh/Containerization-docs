@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <style> .title { font: bold 18px sans-serif } .label{ font: 12px sans-serif } .box{ fill:#f7fff7; stroke:#2f855a; stroke-width:1.5 } </style>
+  <text x="20" y="28" class="title">Database HA Architecture on Kubernetes</text>
+
+  <rect x="20" y="60" width="260" height="120" class="box" rx="6"/>
+  <text x="40" y="90" class="label">Operator (e.g., Zalando / Patroni)</text>
+  <text x="40" y="110" class="label">- Manages StatefulSet/Pods</text>
+  <text x="40" y="130" class="label">- Handles failover, backups</text>
+
+  <rect x="320" y="60" width="520" height="300" class="box" rx="6"/>
+  <text x="340" y="90" class="label">Cluster (StatefulSet / PVs)</text>
+
+  <!-- Pods across zones -->
+  <rect x="360" y="120" width="160" height="70" rx="6" style="fill:#fffef7;stroke:#b7791f"/>
+  <text x="380" y="145" class="label">DB Pod (Leader)</text>
+  <text x="380" y="162" class="label">PVC -> Fast Block Storage</text>
+
+  <rect x="540" y="120" width="160" height="70" rx="6" style="fill:#fffef7;stroke:#b7791f"/>
+  <text x="560" y="145" class="label">Replica Pod</text>
+  <text x="560" y="162" class="label">Replica (sync/async)</text>
+
+  <rect x="360" y="210" width="160" height="70" rx="6" style="fill:#fffef7;stroke:#b7791f"/>
+  <text x="380" y="235" class="label">Replica Pod</text>
+  <text x="380" y="252" class="label">Different AZ / Node</text>
+
+  <line x1="200" y1="120" x2="360" y2="155" stroke="#2f855a" stroke-width="2" marker-end="url(#arrow)" />
+  <text x="200" y="140" class="label">Operator creates and monitors replicas</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2f855a" />
+    </marker>
+  </defs>
+
+  <text x="340" y="340" class="label">Backups -> Off-cluster object storage (S3/GCS)</text>
+  <text x="340" y="360" class="label">PDBs, AntiAffinity, Snapshots, PITR</text>
+</svg>

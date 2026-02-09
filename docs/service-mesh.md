@@ -2,6 +2,8 @@
 
 A service mesh is an infrastructure layer that manages service-to-service communication for microservices. It provides traffic management, security (mTLS, policy), observability (tracing, metrics, logging), and resilience features (retries, timeouts, circuit breaking) without requiring changes in application code.
 
+![Service mesh architecture](assets/service-mesh.svg)
+
 **Core concepts:**
 - **Data plane:** sidecar proxies that handle inbound/outbound traffic for each service instance.
 - **Control plane:** management components that configure and control the proxies (routing rules, security policies, telemetry). 

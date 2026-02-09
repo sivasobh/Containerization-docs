@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="420" viewBox="0 0 900 420">
+  <style> .title { font: bold 18px sans-serif } .label{ font: 12px sans-serif } .master{ fill:#fff7f7; stroke:#c53030 } .replica{ fill:#f7fff7; stroke:#2f855a }</style>
+  <text x="20" y="28" class="title">Redis Cluster & Sentinel Overview</text>
+
+  <rect x="20" y="60" width="260" height="120" fill="#edf2ff" stroke="#2b6cb0" rx="6"/>
+  <text x="40" y="90" class="label">Sentinel (>=3) / Operator</text>
+  <text x="40" y="110" class="label">- Monitors masters, triggers failover</text>
+
+  <!-- Masters row -->
+  <rect x="320" y="80" width="140" height="80" class="master" rx="6"/>
+  <text x="340" y="110" class="label">Master 1 (slots)</text>
+
+  <rect x="480" y="80" width="140" height="80" class="master" rx="6"/>
+  <text x="500" y="110" class="label">Master 2 (slots)</text>
+
+  <rect x="640" y="80" width="140" height="80" class="master" rx="6"/>
+  <text x="660" y="110" class="label">Master 3 (slots)</text>
+
+  <!-- Replicas row -->
+  <rect x="320" y="180" width="140" height="60" class="replica" rx="6"/>
+  <text x="340" y="205" class="label">Replica A</text>
+
+  <rect x="480" y="180" width="140" height="60" class="replica" rx="6"/>
+  <text x="500" y="205" class="label">Replica B</text>
+
+  <rect x="640" y="180" width="140" height="60" class="replica" rx="6"/>
+  <text x="660" y="205" class="label">Replica C</text>
+
+  <line x1="400" y1="160" x2="400" y2="180" stroke="#a0aec0" stroke-width="2"/>
+  <line x1="560" y1="160" x2="560" y2="180" stroke="#a0aec0" stroke-width="2"/>
+  <line x1="720" y1="160" x2="720" y2="180" stroke="#a0aec0" stroke-width="2"/>
+
+  <text x="320" y="270" class="label">Anti-affinity across nodes/AZs, PDBs, fast PVCs</text>
+  <text x="320" y="290" class="label">Backups (RDB/AOF) -> Object storage; test restores</text>
+</svg>

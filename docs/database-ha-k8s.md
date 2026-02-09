@@ -15,6 +15,8 @@ Reference: Achieving High Availability with Distributed Database on Kubernetes a
 - Use PodDisruptionBudgets (PDBs) to prevent simultaneous eviction of quorum members.
 - Prefer storage classes that support synchronous or fast replication across AZs where possible; evaluate RPO/RTO needs carefully.
 
+![Database HA architecture](assets/database-ha.svg)
+
 ## Storage & Persistence
 - Use managed block storage (cloud PVs) with appropriate performance and IOPS characteristics.
 - Use ReadWriteOnce-many (RWO) PVs for single-writer databases and consider clustered filesystems or distributed storage (e.g., Ceph/Rook) only when necessary.
