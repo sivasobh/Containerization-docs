@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: backend-fault-injection
+  namespace: mesh-demo
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - mesh-demo-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /backend
+      fault:
+        delay:
+          percentage:
+            value: 20
+          fixedDelay: 5s
+        abort:
+          httpStatus: 500
+          percentage:
+            value: 10
+      route:
+        - destination:
+            host: backend
+            subset: v1
+          weight: 90
+        - destination:
+            host: backend
+            subset: v2
+          weight: 10
+
+# Notes:
+# - This VirtualService injects a 5s delay on 20% of requests and aborts 10% with HTTP 500.
+# - Use this in a staging environment only to rehearse fault handling and circuit-breaker policies.

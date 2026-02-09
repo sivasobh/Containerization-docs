@@ -1,0 +1,22 @@
+## Example values for kube-prometheus-stack (Prometheus Operator)
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector:
+      matchLabels:
+        release: prometheus
+
+serviceMonitors:
+  enabled: true
+
+grafana:
+  enabled: true
+  adminPassword: "REPLACE_WITH_SECURE_PASSWORD"
+  ingress:
+    enabled: false
+
+prometheusOperator:
+  enabled: true
+
+# Note: This `values.yaml` is a minimal example to deploy kube-prometheus-stack via Helm.
+# Adjust storage, retention, and resource requests for production workloads.

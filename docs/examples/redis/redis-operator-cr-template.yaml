@@ -1,0 +1,47 @@
+## Template CR for a Redis Operator (replace fields per chosen operator's CRD)
+apiVersion: databases.example.com/v1alpha1  # Replace with operator's API group/version
+kind: RedisCluster                         # Replace with the operator-specific kind (e.g., RedisFailover, RedisCluster)
+metadata:
+  name: example-redis
+  namespace: redis-prod
+spec:
+  # Common fields you will typically set in an operator CR
+  replicas: 6                # total nodes (e.g., 3 masters + 3 replicas)
+  redisImage: redis:7.0      # operator may manage image and args
+  storage:
+    persistentVolume:
+      enabled: true
+      storageClassName: standard
+      size: 20Gi
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+  topology:
+    podAntiAffinity: true
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: redis
+  sentinel:
+    enabled: true            # for master/replica topologies; not used by all operators
+  tls:
+    enabled: false           # enable and configure certs per operator docs
+  backup:
+    enabled: true
+    schedule: "0 */6 * * *"   # cron schedule to snapshot every 6 hours
+    storage:
+      s3:
+        bucket: my-redis-backups
+        region: us-east-1
+        credentialsSecret: s3-credentials
+
+# Notes:
+# - Replace apiVersion/kind with the operator's CRD definitions (see operator README).
+# - Operators expose richer settings (resharding, failover policy, forceful rejoin); consult docs.

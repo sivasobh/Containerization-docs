@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-servicemonitor
+  namespace: mesh-demo
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  namespaceSelector:
+    matchNames:
+      - mesh-demo
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+
+# Notes:
+# - This ServiceMonitor requires Prometheus Operator to be installed.
+# - The example backend (hashicorp/http-echo) does not expose /metrics by default;
+#   replace with an instrumented app or add a sidecar exporter for real metric collection.

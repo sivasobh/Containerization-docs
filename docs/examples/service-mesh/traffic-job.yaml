@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backend-traffic-generator
+  namespace: mesh-demo
+spec:
+  template:
+    spec:
+      containers:
+        - name: traffic
+          image: curlimages/curl:8.1.2
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              for i in $(seq 1 1000); do
+                curl -sS -o /dev/null -w "%{http_code} %{time_total}\n" http://backend.mesh-demo.svc.cluster.local:80/backend &
+                sleep 0.1
+              done
+      restartPolicy: Never
+  backoffLimit: 0
+
+# This Job sends 1,000 requests at ~10rps to the backend service inside the cluster.

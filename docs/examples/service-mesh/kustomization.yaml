@@ -1,0 +1,12 @@
+resources:
+  - namespace-injection.yaml
+  - simple-backend.yaml
+  - istio-routing.yaml
+  - istio-fault-injection.yaml
+  - prometheus-servicemonitor.yaml
+  - linkerd-traffic-split.yaml
+  - grafana/grafana-dashboard-configmap.yaml
+  - traffic-job.yaml
+
+commonLabels:
+  app: mesh-demo-examples
