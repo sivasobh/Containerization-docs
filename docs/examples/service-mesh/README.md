@@ -67,3 +67,65 @@ kubectl apply -f docs/examples/service-mesh/linkerd-traffic-split.yaml
 ```
 
 2. Ensure the `backend` Service exists and routes to the `backend-v1/backend-v2` services created above; test using the client pod.
+
+Deploy & Test (full demo)
+
+This repo includes a kustomize overlay and helper script to deploy the demo and monitoring stack to a local cluster (e.g., kind).
+
+1. Install Prometheus + Grafana and apply the demo resources (uses Helm + kubectl):
+
+```bash
+bash docs/examples/service-mesh/deploy-kind.sh
+```
+
+2. (Alternative manual steps)
+
+```bash
+# Install kube-prometheus-stack
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install monitoring prometheus-community/kube-prometheus-stack -f docs/examples/service-mesh/prometheus-helm-values.yaml --namespace monitoring --create-namespace
+
+# Apply the kustomize overlay (all demo manifests)
+kubectl apply -k docs/examples/service-mesh
+```
+
+3. Confirm demo resources are running:
+
+```bash
+kubectl get ns mesh-demo monitoring linkerd-demo -o wide
+kubectl get pods -n mesh-demo
+kubectl get pods -n monitoring
+```
+
+Grafana provisioning & automatic dashboard
+
+- The example includes a `ConfigMap` (`grafana-backend-dashboard`) labeled so the Grafana sidecar (kube-prometheus-stack) can automatically pick up the dashboard. If you installed Grafana separately, import `docs/examples/service-mesh/grafana-backend-dashboard.json` manually.
+- Datasource provisioning example is in `docs/examples/service-mesh/grafana/provisioning/datasources/datasource.yaml` (points to Prometheus Operator service).
+
+Traffic generation (canary testing)
+
+1. Run the Job inside the cluster to generate traffic to `/backend`:
+
+```bash
+kubectl apply -f docs/examples/service-mesh/traffic-job.yaml -n mesh-demo
+```
+
+2. Check Job logs or pod logs to validate responses and observe routing percentages.
+
+Kustomize overlay
+
+- Use `kubectl apply -k docs/examples/service-mesh` to apply all example resources in the correct order.
+
+Cleanup
+
+```bash
+kubectl delete -k docs/examples/service-mesh
+helm uninstall monitoring -n monitoring || true
+kubectl delete ns mesh-demo linkerd-demo monitoring || true
+```
+
+Notes
+- The demo uses lightweight example containers; for production replace with instrumented services exposing `/metrics`.
+- If your Istio ingress gateway is in a non-standard namespace or uses a different service name, update `istio-routing.yaml` and port-forward commands accordingly.
+
